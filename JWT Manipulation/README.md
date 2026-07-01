@@ -1,4 +1,4 @@
-# JWT Role Claim Analysis
+# JWT Manipulation
 
 ## Overview
 
