@@ -1,1 +1,1 @@
-
+This lab documents the initial reconnaissance phase of OWASP Juice Shop using Burp Suite. It focuses on capturing HTTP traffic, mapping application endpoints, and analyzing requests through the Burp Suite Proxy, Site map, and HTTP history tools in a controlled environment.
