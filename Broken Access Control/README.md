@@ -1,26 +1,42 @@
-# Broken Access Control
+Broken Access Control Exploitation
+Overview
+Conducted testing on the OWASP Juice Shop application to identify and exploit Broken Access Control vulnerabilities, demonstrating how insufficient authorization checks can allow unauthorized access to restricted resources.
+Tools Used
 
-## Overview
+Burp Suite (Proxy & Repeater)
+OWASP Juice Shop
 
-This lab focuses on testing broken access control vulnerabilities in OWASP Juice Shop. The goal was to understand how restricted resources can sometimes be accessed without proper authorization.
+Methodology & Steps
 
-## What I Did
+Initial Access
+Logged in as a standard user and navigated through the application while monitoring all requests in Burp Suite.
+Access Control Testing
+Attempted to access administrative and sensitive areas of the application, including:
+The /admin and /administration sections
+User management and configuration endpoints (/api/Users, /rest/admin/application-configuration)
+Other users' data via IDOR attempts (/api/users/ID)
 
-* Navigated through the application as a normal user
-* Attempted to access restricted pages or resources
-* Observed application responses when accessing unauthorized areas
-* Analyzed how the application handles permission checks
+Discovery
+Identified that several admin-only resources were accessible without proper authorization.
+Privilege Escalation
+Combined findings with SQL Injection and JWT token manipulation to escalate privileges from a standard user to administrator/superadmin level.
 
-## What I Observed
+Key Findings
 
-I observed that certain actions or pages behaved differently depending on how access was attempted. Some requests returned access denied responses, while others revealed that access control was not properly enforced in all cases.
+The /admin endpoint was publicly accessible without authentication.
+Multiple REST API endpoints (/api/Users, /rest/admin/...) returned sensitive data without proper role validation.
+Successfully escalated privileges using JWT token manipulation by changing the role claim and setting the algorithm to none.
 
-## What I Learned
+What I Learned
 
-This exercise helped me understand how broken access control occurs when an application fails to properly restrict user actions based on roles or permissions.
+Broken Access Control occurs when applications fail to properly enforce authorization checks on the server side.
+Relying solely on client-side (frontend) restrictions is insufficient — all sensitive operations must be validated on the backend.
+IDOR (Insecure Direct Object Reference) and weak token-based authorization are common real-world issues.
+Understanding how to chain multiple vulnerabilities (SQLi → JWT manipulation → privilege escalation) is critical for effective penetration testing.
 
-I learned that attackers can potentially access sensitive functions or data if authorization checks are weak or missing. I also learned the importance of enforcing access control on both the frontend and backend, not just relying on the user interface.
+Security Takeaways for Developers
 
-## Key Takeaway
-
-Proper authorization must be enforced on the server side to prevent unauthorized access to protected resources.
+Implement robust server-side authorization checks for every sensitive action.
+Follow the principle of least privilege.
+Never trust client-side controls for access decisions.
+Properly validate and secure JSON Web Tokens (strong signing algorithms, no sensitive data in payload).
