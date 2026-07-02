@@ -1,41 +1,44 @@
-# JWT Manipulation
+JSON Web Token (JWT) Manipulation & Privilege Escalation
+Overview
+Explored the use of JSON Web Tokens (JWTs) for authentication and authorization in the OWASP Juice Shop application. The primary goal was to demonstrate how weak JWT implementation can lead to privilege escalation.
+Tools Used
 
-## Overview
-
-This lab explores how JSON Web Tokens are used for authentication and authorization in OWASP Juice Shop. The objective was to better understand how role information stored in a JWT can influence application behavior when security controls are not implemented correctly.
-
-## Tools Used
-
-Burp Suite
-
-JWT.io
-
+Burp Suite (Proxy & Repeater)
+jwt.io
 OWASP Juice Shop
-
 Kali Linux
 
-## What I Did
+Methodology & Steps
 
-After authenticating to the application, I captured the issued JWT and examined its contents using JWT.io. I reviewed the token claims and performed role claim modifications within the authorized lab environment to observe how the application responded.
+Token Capture
+Successfully logged in as administrator using SQL Injection and captured the issued JWT token from the response.
+Token Analysis
+Decoded the JWT using jwt.io to examine its structure (Header, Payload, Signature).
+Identified sensitive claims, particularly the role field.
+Token Manipulation
+Modified the role claim from admin to superadmin.
+Changed the signing algorithm from RS256 to none (removing signature validation).
+Re-encoded the modified token.
+Exploitation
+Used the tampered token in subsequent requests via the Authorization: Bearer header.
+Observed successful privilege escalation and access to higher-level functionality.
 
-## What the Screenshots Show
+Key Findings
 
-The screenshots show the captured JWT, inspection of its claims, modification of the role value, and the application's HTTP responses during testing.
+The application accepted unsigned tokens (alg: "none").
+Changing the role claim granted elevated privileges.
+Demonstrated a complete authentication/authorization bypass.
 
-## What I Observed
+What I Learned
 
-During testing, I modified the role claim from a standard customer role to a higher privileged role within the lab environment. After the modification, the application returned an HTTP 200 response. I then restored the original role value and continued observing the application's behavior.
+JSON Web Tokens are widely used for stateless authentication but can be dangerous if not properly validated.
+Server-side validation of JWT signatures, expiration, and claims is critical.
+Authorization logic must always be enforced on the server — never trust client-controlled data.
+Understanding JWT structure helps identify common implementation weaknesses.
 
-## What I Learned
+Security Takeaways for Developers
 
-This exercise helped me understand how JWTs carry authentication and authorization information and why applications must never rely solely on the contents of a token. I learned that JWT signatures, token validation, and proper server side authorization checks are essential for protecting privileged functionality.
-
-I also gained a better understanding of how HTTP responses can provide useful information during security testing and why every authorization decision should be validated on the server rather than trusting client controlled data.
-
-## Security Takeaways
-
-Applications should always verify JWT signatures before accepting a token.
-
-Authorization decisions should be enforced on the server for every request.
-
-JWTs should be validated for integrity, expiration, and authenticity before granting access to protected resources.
+Always use strong signing algorithms (RS256, ES256) and never accept none.
+Validate JWT signature, expiration, issuer, and audience on every request.
+Do not store sensitive authorization data (e.g., roles) in the payload without proper protection.
+Implement server-side authorization checks independent of the token content.
