@@ -22,6 +22,7 @@ Attack Workflow & Key Steps
 Login Request Interception
 ---
 Used Burp Suite Proxy to capture the login request. Sent it to Repeater to analyze and manipulate the authentication flow.
+
 SQL Injection for Authentication Bypass
 ---
 Exploited a SQL Injection vulnerability in the login form using the payload ' or 1=1-- to log in as the administrator account without knowing the actual password.
