@@ -41,10 +41,10 @@ Used John the Ripper to crack the MD5 hash, recovering the plaintext password ad
 Screenshots Included
 --
 
-Burp Suite capturing and manipulating login requests
-SQL Injection bypass
-JWT decoding and manipulation on jwt.io
-Password cracking with John the Ripper
+Burp Suite capturing and manipulating login requests,
+SQL Injection bypass,
+JWT decoding and manipulation on jwt.io,
+Password cracking with John the Ripper,
 Successful login as administrator/superadmin
 
 Key Learnings
