@@ -13,9 +13,9 @@ John the Ripper
 Kali Linux
 -------------
 OWASP Juice Shop
-------------------
+-------------
 
-
+----
 Attack Workflow & Key Steps
 ----
 
